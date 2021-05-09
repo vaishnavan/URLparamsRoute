@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import axios from 'axios';
+import Details from './component/Details';
+import Navlink from './component/Navlink';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       myData:[]
+    }
+  }
+
+  componentDidMount(){
+    axios.get("https://jsonplaceholder.typicode.com/posts")
+    .then((res)=>{
+        this.setState({
+            myData:res.data
+        })
+    })
+}
+  
+  render() {
+    const {myData} = this.state;
+    return (
+      <div>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Navlink />
+            </Route>
+            <Route path="/details/:title">
+              <Details pets={myData} />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default App
